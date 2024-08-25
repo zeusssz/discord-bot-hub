@@ -454,5 +454,5 @@ async def serverstatus(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
 
-token = os.getenv("TOKEN")
+token = os.getenv("MOD-TOKEN")
 client.run(token) # thanks random guy who got into the bubbles bot and didnt nuke everything
