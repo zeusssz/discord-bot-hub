@@ -6,6 +6,7 @@ import logging
 import os
 from discord.ui import Button, View
 import math
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
 
