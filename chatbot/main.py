@@ -1,6 +1,7 @@
 import discord
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+from dotenv import load_dotenv
 
 model_name = "microsoft/DialoGPT-medium"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
