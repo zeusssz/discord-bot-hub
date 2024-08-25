@@ -6,6 +6,7 @@ import asyncio
 import logging
 import os
 from discord.ext import tasks
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
 
