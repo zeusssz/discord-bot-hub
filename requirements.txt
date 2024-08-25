@@ -1,0 +1,6 @@
+ffmpeg-python
+yt-dlp
+opuslib
+pynacl
+torch
+transformers
