@@ -21,7 +21,7 @@ client = discord.Client(intents=intents, activity=activity)
 starred_messages = set()
 tree = discord.app_commands.CommandTree(client)
 
-GUILD_ID = 1264746307076227166
+GUILD_ID = 0 #your guild id here
 ROLES_FILE = "roles.json"
 BANS_FILE = "bans.json"
 MUTES_FILE = "mutes.json"
@@ -29,8 +29,8 @@ WARNINGS_FILE = "warnings.json"
 BANNED_WORDS = "banned_words.json"
 NOTES_FILE = "notes.json"
 STAR_EMOJI = '⭐'
-STARBOARD_CHANNEL_ID = 1264756677169905675
-WELCOME_CHANNEL_ID = 1264746307076227166
+STARBOARD_CHANNEL_ID = 0 #your starboard channel id
+WELCOME_CHANNEL_ID = 0 #your welcome channel id
 
 log_capture = []
 
