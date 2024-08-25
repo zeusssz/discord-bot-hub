@@ -4,3 +4,4 @@ opuslib
 pynacl
 torch
 transformers
+python-dotenv
