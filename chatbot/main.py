@@ -24,5 +24,5 @@ async def on_message(message):
         bot_response = tokenizer.decode(chat_history_ids[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
         await message.channel.send(bot_response)
 
-token = os.environ['TOKEN']
+token = os.environ['CHAT-TOKEN']
 client.run(token)
