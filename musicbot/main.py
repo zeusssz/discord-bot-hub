@@ -12,12 +12,12 @@ logging.basicConfig(level=logging.INFO)
 intents = discord.Intents.default()
 intents.voice_states = True 
 
-activity = discord.Activity(type=discord.ActivityType.listening, name="La Grenadière")
+activity = discord.Activity(type=discord.ActivityType.listening, name="Lorem Ipsum")
 client = discord.Client(intents=intents, activity=activity)
 tree = CommandTree(client)
 
-allowed_role_id = 1264882337917829122
-booster_role_id = 1264764119928668211
+allowed_role_id = 0 #input your role id
+booster_role_id = 0 #input your role id
 
 class QueueView(View):
     def __init__(self, songs, current_song, user):
@@ -313,5 +313,5 @@ async def skip(interaction: discord.Interaction, count: int = 1):
     else:
         await interaction.response.send_message("Currently no audio is playing.", ephemeral=True)
 
-token = os.getenv("TOKEN")
+token = os.getenv("MUSIC-TOKEN")
 client.run(token) #thanks random discord guy for hacking our bot but being nice about it
