@@ -60,8 +60,9 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 - Engage your server, especially when there arent many users active at a given time.
 
 **Setup:**
-1. Edit the `.env` file and add your Discord bot token and.
-2. Run `python main.py`.
+1. Edit the `.env` file and add your Discord bot token.
+2. Edit the code to match with variable in the `.env` file, if you are running all 4 bots.
+3. Run `python main.py`.
 
 ## Installation
 
