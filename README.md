@@ -23,7 +23,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 - AutoMod
 
 **Setup:**
-1. Create a `.env` file in the directory and add your Discord bot token.
+1. Edit the `.env` file in the directory and add your Discord bot token.
 2. Run `python moderationbot.py`.
 3. Setup your roleIDs which are left as placeholders.
 
@@ -36,7 +36,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 - Spotify support for boosters.
 
 **Setup:**
-1. Create a `.env` file in the directory and add your Discord bot token.
+1. Edit `.env` file in the directory and add your Discord bot token.
 2. Run `python musicbot.py`.
 3. Setup your roleIDs which are left as placeholders.
 
@@ -48,7 +48,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 - View top balances with `/baltop`.
 
 **Setup:**
-1. Create a `.env` file in the directory and add your Discord bot token.
+1. Edit the `.env` file in the directory and add your Discord bot token.
 2. Run `python bot.py`.
 3. Customise messages, odds, cooldowns, etc.
 
@@ -60,8 +60,8 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 - Engage your server, especially when there arent many users active at a given time.
 
 **Setup:**
-1. Create a `.env` file and add your Discord bot token and.
-2. Run `python bot.py`.
+1. Edit the `.env` file and add your Discord bot token and.
+2. Run `python main.py`.
 
 ## Installation
 
@@ -69,12 +69,12 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
    ```bash
    git clone https://github.com/zeusssz/discord-bot-hub.git
    ```
-2. Navigate to the desired bot file.
-3. Install the required dependencies:
+2. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-4. Create a `.env` file in each bot's directory with your Discord bot token.
+3. Navigate to the desired bot file.
+4. Run the bot. 
 
 ## Contributing
 
