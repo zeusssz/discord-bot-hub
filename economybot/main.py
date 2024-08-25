@@ -169,5 +169,5 @@ async def on_message(message):
         except asyncio.TimeoutError:
             await message_sent.delete()
 
-token = os.environ['TOKEN']
+token = os.environ['ECON-TOKEN']
 client.run(token)
