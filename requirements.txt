@@ -5,4 +5,3 @@ pynacl
 torch
 transformers
 python-dotenv
-dotenv
