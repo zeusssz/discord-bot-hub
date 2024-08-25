@@ -8,6 +8,7 @@ import asyncio
 from typing import Optional
 import re
 import time
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
 
