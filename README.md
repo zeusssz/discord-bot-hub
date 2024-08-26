@@ -1,4 +1,4 @@
-# ![image](https://github.com/user-attachments/assets/d9bb7d17-3855-452c-b2df-d5857f031ce1)🤖 Discord Bot Hub
+# 🤖 Discord Bot Hub
 
 Welcome to the Discord Bot Hub! This repository contains multiple Discord bots designed for various functionalities. Currently, it includes:
 
