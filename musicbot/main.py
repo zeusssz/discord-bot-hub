@@ -315,4 +315,4 @@ async def skip(interaction: discord.Interaction, count: int = 1):
         await interaction.response.send_message("Currently no audio is playing.", ephemeral=True)
 
 token = os.getenv("MUSIC-TOKEN")
-client.run(token) #thanks random discord guy for hacking our bot but being nice about it
+client.run(token)
