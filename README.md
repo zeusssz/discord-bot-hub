@@ -8,6 +8,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 - **ChatBot**: A bot for engaging in conversational interactions using AI.
 
 ⚠️**WARNING**⚠️
+<br>
 ChatBot will use a considerable amount of power to run, and it is reccommended to have a powerful computer to run it, especially if you plan to run all the bots
 
 ## Dependencies 
