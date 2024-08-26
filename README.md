@@ -2,10 +2,13 @@
 
 Welcome to the Discord Bot Hub! This repository contains multiple Discord bots designed for various functionalities. Currently, it includes:
 
-- **ModerationBot**: A feature rich bot for server moderation and management.
+- **ModeratorBot**: A feature rich bot for server moderation and management.
 - **MusicBot**: A bot for playing music in voice channels.
 - **EconomyBot**: A bot for managing an in-server economy system.
 - **ChatBot**: A bot for engaging in conversational interactions using AI.
+
+⚠️**WARNING**⚠️
+ChatBot will use a considerable amount of power to run, and it is reccommended to have a powerful computer to run it, especially if you plan to run all the bots
 
 ## Dependencies 
 - pip
@@ -13,7 +16,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 
 ## Bots Overview
 
-### ModerationBot
+### ModeratorBot
 
 **Features:**
 - Ban, kick, and mute users.
@@ -24,7 +27,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 
 **Setup:**
 1. Edit the `.env` file in the directory and add your Discord bot token.
-2. Run `python moderationbot.py`.
+2. Run `python moderatorbot/main.py`.
 3. Setup your roleIDs which are left as placeholders.
 
 ### MusicBot
@@ -37,7 +40,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 
 **Setup:**
 1. Edit `.env` file in the directory and add your Discord bot token.
-2. Run `python musicbot.py`.
+2. Run `python musicbot/main.py`.
 3. Setup your roleIDs which are left as placeholders.
 
 ### EconomyBot
@@ -49,7 +52,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 
 **Setup:**
 1. Edit the `.env` file in the directory and add your Discord bot token.
-2. Run `python bot.py`.
+2. Run `python economybot/main.py`.
 3. Customise messages, odds, cooldowns, etc.
 
 ### ChatBot
@@ -62,7 +65,7 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 **Setup:**
 1. Edit the `.env` file and add your Discord bot token.
 2. Edit the code to match with variable in the `.env` file, if you are running all 4 bots.
-3. Run `python main.py`.
+3. Run `python chatbot/main.py`.
 
 ## Installation
 
@@ -74,8 +77,8 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
    ```bash
    pip install -r requirements.txt
    ```
-3. Navigate to the desired bot file.
-4. Run the bot. 
+3. Navigate to the desired bot file(s).
+4. Run the bot(s). 
 
 ## Contributing
 
