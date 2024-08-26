@@ -17,7 +17,7 @@ intents.members = True
 intents.message_content = True
 intents.reactions = True
 
-activity = discord.Activity(type=discord.ActivityType.watching, name="That Ship Over There")
+activity = discord.Activity(type=discord.ActivityType.watching, name="Lorem Ipsum")
 client = discord.Client(intents=intents, activity=activity)
 starred_messages = set()
 tree = discord.app_commands.CommandTree(client)
@@ -59,8 +59,7 @@ def load_data(file_name):
 def save_data(file_name, data):
     with open(file_name, "w") as f:
         json.dump(data, f, indent=4)
-
-# Ensure all necessary files exist
+        
 for file_name in [ROLES_FILE, BANS_FILE, MUTES_FILE, WARNINGS_FILE, BANNED_WORDS, NOTES_FILE]:
     if not os.path.exists(file_name):
         with open(file_name, "w") as f:
@@ -116,7 +115,7 @@ async def roleadd(interaction: discord.Interaction, member: discord.Member, role
 ])
 async def ban(interaction: discord.Interaction, member: discord.Member, duration: app_commands.Choice[str], reason: Optional[str] = "No reason provided"):
     if interaction.user.guild_permissions.ban_members:
-        await member.send(f"You have been banned for: {duration.value} because of {reason}\n-# To appeal, click [here](<https://forms.gle/5JossW5qmbXQqkyh7>)")
+        await member.send(f"You have been banned for: {duration.value} because of {reason}\n-# To appeal, click [here](<https://example.com>)") # input your appeals form here
         await member.ban(reason=reason)
         await interaction.response.send_message(f"{member.mention} has been banned for: {reason} ({duration.name})")
         if duration.value != "Permanent":
@@ -361,6 +360,7 @@ async def membercount(interaction: discord.Interaction):
 #         except discord.Forbidden:
 #             logging.error(f"Could not delete message in {message.channel.name} by {message.author.display_name}.")
 #         return
+
 @client.event
 async def on_raw_reaction_add(payload):
     if payload.emoji.name == STAR_EMOJI:
@@ -385,16 +385,11 @@ async def on_raw_reaction_add(payload):
                                 await starboard_channel.send(embed=embed)
                                 return
                     else:
-                        # If no image attachment, send the embed and the attachment separately
                         await starboard_channel.send(embed=embed)
                         for attachment in message.attachments:
                             await starboard_channel.send(attachment.url)
                         return
-
-                # If there are no attachments, just send the embed
                 await starboard_channel.send(embed=embed)
-
-# whale cum
 @client.event
 async def on_member_join(member):
     welcome_channel = client.get_channel(WELCOME_CHANNEL_ID)
@@ -456,4 +451,4 @@ async def serverstatus(interaction: discord.Interaction):
         await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
 
 token = os.getenv("MOD-TOKEN")
-client.run(token) # thanks random guy who got into the bubbles bot and didnt nuke everything
+client.run(token)
