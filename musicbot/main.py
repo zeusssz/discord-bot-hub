@@ -290,7 +290,7 @@ async def queue(interaction: discord.Interaction):
     if current_song:
         embed.add_field(name="**Currently Playing**", value=current_song.title, inline=False)
 
-    embed.set_footer(text="Page 1/1")  # Initial placeholder footer
+    embed.set_footer(text="Page 1/1")
 
     view = QueueView(songs, current_song, interaction.user)
     await interaction.response.send_message(embed=view.generate_embed(0), view=view)
