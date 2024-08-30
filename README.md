@@ -9,7 +9,8 @@ Welcome to the Discord Bot Hub! This repository contains multiple Discord bots d
 
 ⚠️**WARNING**⚠️
 <br>
-ChatBot will use a considerable amount of power to run, and it is reccommended to have a powerful computer to run it, especially if you plan to run all the bots
+ChatBot will use a considerable amount of processing power to run, and it is reccommended to have a powerful computer to run it, especially if you plan to run all the bots.
+It is recommended to have good CPU/GPU, if you plan to increase the default context window, or require faster responses.
 
 ## Dependencies 
 - pip
