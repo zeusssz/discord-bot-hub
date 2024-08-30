@@ -1,7 +1,6 @@
-ffmpeg-python
-yt-dlp
-opuslib
-pynacl
-torch
-transformers
-python-dotenv
+fluent-ffmpeg
+ytdl-core
+@discordjs/opus
+@discordjs/voice
+@xenova/transformers
+dotenv
