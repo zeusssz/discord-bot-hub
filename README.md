@@ -71,6 +71,8 @@ It is recommended to have good CPU/GPU, if you plan to increase the default cont
 1. Edit the `.env` file and add your Discord bot token.
 2. Edit the code to match with variable in the `.env` file, if you are running all 4 bots.
 3. Run `python chatbot/main.py`.
+4. (Optional) you may change the AI Model being used, or you may also fine-tune it.
+If you wish to fine tune it, please [read this](https://huggingface.co/docs/transformers/en/training)
 
 ## Installation
 
