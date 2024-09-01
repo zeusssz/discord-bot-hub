@@ -7,6 +7,15 @@ import os
 from discord.ui import Button, View
 import math
 from dotenv import load_dotenv
+from spotipy import Spotify
+from spotipy.oauth2 import SpotifyClientCredentials
+
+load_dotenv()
+
+spotify = Spotify(client_credentials_manager=SpotifyClientCredentials(
+    client_id=os.getenv('SPOTIFY_CLIENT_ID'),
+    client_secret=os.getenv('SPOTIFY_CLIENT_SECRET')
+))
 
 logging.basicConfig(level=logging.INFO)
 
@@ -190,7 +199,7 @@ async def leave(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("The bot is not connected to a voice channel.", ephemeral=True)
 
-@tree.command(name="play", description="Play a song or playlist from a YouTube URL")
+@tree.command(name="play", description="Play a song or playlist from a YouTube or Spotify URL")
 async def play(interaction: discord.Interaction, url: str):
     if not has_allowed_role(interaction):
         await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
@@ -206,8 +215,39 @@ async def play(interaction: discord.Interaction, url: str):
             await interaction.response.send_message("Bot is not in a voice channel.", ephemeral=True)
             return
 
-        await interaction.response.defer(ephemeral=False) 
-        playlist = await YTDLSource.from_url(url, loop=client.loop, stream=True)
+        await interaction.response.defer(ephemeral=False)
+
+        playlist = []
+
+        if "spotify.com" in url:
+            if "track" in url:
+                spotify_track = spotify.track(url)
+                track_name = spotify_track['name']
+                artist_name = spotify_track['artists'][0]['name']
+                search_query = f"{artist_name} - {track_name}"
+
+                yt_info = await YTDLSource.from_url(f"ytsearch:{search_query}", loop=client.loop, stream=True)
+                playlist.extend(yt_info)
+
+            elif "playlist" in url:
+                playlist_id = url.split("/")[-1].split("?")[0]
+                spotify_playlist = spotify.playlist_tracks(playlist_id)
+                
+                for item in spotify_playlist['items']:
+                    track = item['track']
+                    track_name = track['name']
+                    artist_name = track['artists'][0]['name']
+                    search_query = f"{artist_name} - {track_name}"
+
+                    yt_info = await YTDLSource.from_url(f"ytsearch:{search_query}", loop=client.loop, stream=True)
+                    playlist.extend(yt_info)
+
+        else:
+            playlist = await YTDLSource.from_url(url, loop=client.loop, stream=True)
+
+        if not playlist:
+            await interaction.followup.send("Could not find any tracks to play.", ephemeral=True)
+            return
 
         for player in playlist:
             await music_player.queue.put(player)
@@ -218,6 +258,7 @@ async def play(interaction: discord.Interaction, url: str):
         else:
             queue_position = music_player.queue.qsize()
             await interaction.followup.send(f"Added `{playlist[0].title}` to the queue. Currently at queue position {queue_position}")
+
     except Exception as e:
         await interaction.followup.send(f'An error occurred: {e}', ephemeral=True)
 
