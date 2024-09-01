@@ -26,8 +26,8 @@ activity = discord.Activity(type=discord.ActivityType.listening, name="Lorem Ips
 client = discord.Client(intents=intents, activity=activity)
 tree = CommandTree(client)
 
-allowed_role_id = 0 #input your role id
-booster_role_id = 0 #input your role id
+allowed_role_id = 0 # input your role id
+booster_role_id = 0 # input your role id
 
 class QueueView(View):
     def __init__(self, songs, current_song, user):
@@ -205,155 +205,58 @@ async def play(interaction: discord.Interaction, url: str):
         await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
         return
 
+    if not interaction.user.voice:
+        await interaction.response.send_message("You are not connected to a voice channel.", ephemeral=True)
+        return
+
+    voice_client = interaction.guild.voice_client
+    if not voice_client:
+        await interaction.response.send_message("Bot is not in a voice channel.", ephemeral=True)
+        return
+
+    await interaction.response.defer(ephemeral=False)
+
+    playlist = []
+
     try:
-        if not interaction.user.voice:
-            await interaction.response.send_message("You are not connected to a voice channel.", ephemeral=True)
-            return
-
-        voice_client = interaction.guild.voice_client
-        if not voice_client:
-            await interaction.response.send_message("Bot is not in a voice channel.", ephemeral=True)
-            return
-
-        await interaction.response.defer(ephemeral=False)
-
-        playlist = []
-
         if "spotify.com" in url:
-            if "track" in url:
-                spotify_track = spotify.track(url)
-                track_name = spotify_track['name']
-                artist_name = spotify_track['artists'][0]['name']
-                search_query = f"{artist_name} - {track_name}"
-
-                yt_info = await YTDLSource.from_url(f"ytsearch:{search_query}", loop=client.loop, stream=True)
-                playlist.extend(yt_info)
-
-            elif "playlist" in url:
-                playlist_id = url.split("/")[-1].split("?")[0]
-                spotify_playlist = spotify.playlist_tracks(playlist_id)
-                
-                for item in spotify_playlist['items']:
-                    track = item['track']
-                    track_name = track['name']
-                    artist_name = track['artists'][0]['name']
-                    search_query = f"{artist_name} - {track_name}"
-
-                    yt_info = await YTDLSource.from_url(f"ytsearch:{search_query}", loop=client.loop, stream=True)
-                    playlist.extend(yt_info)
-
+            # Spotify playlist URL handling
+            results = spotify.search(q=url, type="track", limit=10)
+            for track in results['tracks']['items']:
+                playlist.append(track['external_urls']['spotify'])
         else:
-            playlist = await YTDLSource.from_url(url, loop=client.loop, stream=True)
+            playlist = await YTDLSource.from_url(url, stream=True)
+        
+        if playlist:
+            for track in playlist:
+                await music_player.queue.put(track)
 
-        if not playlist:
-            await interaction.followup.send("Could not find any tracks to play.", ephemeral=True)
-            return
+            if not voice_client.is_playing():
+                await music_player.play_next(voice_client)
 
-        for player in playlist:
-            await music_player.queue.put(player)
-
-        if not voice_client.is_playing():
-            await music_player.play_next(voice_client)
-            await interaction.followup.send(f'**Now playing:** `{playlist[0].title}`')
+            await interaction.followup.send(f"Added to queue: {', '.join([track.title for track in playlist])}")
         else:
-            queue_position = music_player.queue.qsize()
-            await interaction.followup.send(f"Added `{playlist[0].title}` to the queue. Currently at queue position {queue_position}")
+            await interaction.followup.send("No results found.")
 
     except Exception as e:
-        await interaction.followup.send(f'An error occurred: {e}', ephemeral=True)
+        await interaction.followup.send(f"An error occurred: {str(e)}")
 
-@tree.command(name="pause", description="Pause the currently playing song")
-async def pause(interaction: discord.Interaction):
-    if not has_allowed_role(interaction):
-        await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
-        return
-
-    voice_client = interaction.guild.voice_client
-    if voice_client and voice_client.is_playing():
-        voice_client.pause()
-        await interaction.response.send_message("Paused the song")
-    else:
-        await interaction.response.send_message("Currently no audio is playing.", ephemeral=True)
-
-@tree.command(name="resume", description="Resume the currently paused song")
-async def resume(interaction: discord.Interaction):
-    if not has_allowed_role(interaction):
-        await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
-        return
-
-    voice_client = interaction.guild.voice_client
-    if voice_client and voice_client.is_paused():
-        voice_client.resume()
-        await interaction.response.send_message("Resumed the song")
-    else:
-        await interaction.response.send_message("The audio is not paused.", ephemeral=True)
-
-@tree.command(name="stop", description="Stop the currently playing song")
-async def stop(interaction: discord.Interaction):
-    if not has_allowed_role(interaction):
-        await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
-        return
-
-    voice_client = interaction.guild.voice_client
-    if voice_client and voice_client.is_playing():
-        voice_client.stop()
-        voice_client.pause()
-        await interaction.response.send_message("Stopped the song")
-    else:
-        await interaction.response.send_message("Currently no audio is playing.", ephemeral=True)
-
-@tree.command(name="current", description="Show the currently playing song")
-async def current(interaction: discord.Interaction):
-    if not has_allowed_role(interaction):
-        await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
-        return
-
-    current_song = music_player.current
-
-    if not current_song:
-        await interaction.response.send_message("No song is currently playing.", ephemeral=True)
-        return
-
-    embed = discord.Embed(title="Currently Playing", description=current_song.title, color=0x808000)
-    await interaction.response.send_message(embed=embed)
-
-@tree.command(name="queue", description="Show the song queue")
+@tree.command(name="queue", description="Displays the current song queue")
 async def queue(interaction: discord.Interaction):
+    if not has_allowed_role(interaction, playlist=True):
+        await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
+        return
 
-    songs = list(music_player.queue._queue)
-    current_song = music_player.current
-
-    if not songs:
+    if music_player.queue.empty():
         await interaction.response.send_message("The queue is currently empty.", ephemeral=True)
         return
 
-    embed = discord.Embed(title="Song Queue", description="List of songs in the queue", color=0x808000)
-    if current_song:
-        embed.add_field(name="**Currently Playing**", value=current_song.title, inline=False)
-
-    embed.set_footer(text="Page 1/1")
-
+    songs = list(music_player.queue.queue)
+    current_song = music_player.current.data if music_player.current else None
     view = QueueView(songs, current_song, interaction.user)
-    await interaction.response.send_message(embed=view.generate_embed(0), view=view)
+    
+    embed = view.generate_embed(view.current_page)
+    message = await interaction.response.send_message(embed=embed, view=view)
+    view.message = message
 
-@tree.command(name="skip", description="Skip the currently playing song")
-async def skip(interaction: discord.Interaction, count: int = 1):
-    if not has_allowed_role(interaction):
-        await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
-        return
-
-    voice_client = interaction.guild.voice_client
-    if voice_client and voice_client.is_playing():
-        for _ in range(count):
-            voice_client.stop()
-            await asyncio.sleep(1) 
-
-        if count == 1:
-            await interaction.response.send_message(f"Skipped {count} song")
-        else:
-            await interaction.response.send_message(f"Skipped {count} songs")
-    else:
-        await interaction.response.send_message("Currently no audio is playing.", ephemeral=True)
-
-token = os.getenv("MUSIC-TOKEN")
-client.run(token)
+client.run(os.getenv('MUSIC_TOKEN'))
