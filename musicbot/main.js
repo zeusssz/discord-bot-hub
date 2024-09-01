@@ -1,42 +1,50 @@
-const { Client, GatewayIntentBits, Events, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, Events, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ActivityType } = require('discord.js');
 const ytdl = require('ytdl-core');
-const ffmpeg = require('fluent-ffmpeg');
 const { config } = require('dotenv');
+const SpotifyWebApi = require('spotify-web-api-node');
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, VoiceConnectionStatus, AudioPlayerStatus } = require('@discordjs/voice');
 
 config();
 
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env['SPOTIFY-CLIENT-ID'],
+    clientSecret: process.env['SPOTIFY-CLIENT-SECRET']
+});
+
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ],
+    presence: {
+        activities: [{ name: 'Lorem Ipsum', type: ActivityType.Listening }]
+    }
 });
 
 const allowedRoleId = '0'; // Replace with your role ID
 const boosterRoleId = '0'; // Replace with your role ID
 
-class MusicPlayer {
-    constructor() {
-        this.queue = [];
-        this.current = null;
-    }
+const musicQueue = {
+    queue: [],
+    current: null,
+    player: createAudioPlayer()
+};
 
-    async playNext(voiceConnection) {
-        if (this.queue.length > 0) {
-            this.current = this.queue.shift();
-            voiceConnection.play(this.current.stream, { type: 'opus' })
-                .on('finish', () => this.playNext(voiceConnection))
-                .on('error', (error) => console.error('Player error:', error));
-            return true;
-        }
-        return false;
-    }
-}
-
-const musicPlayer = new MusicPlayer();
-
-client.once(Events.ClientReady, () => {
+client.once(Events.ClientReady, async () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    try {
+        await spotifyApi.clientCredentialsGrant().then(
+            data => spotifyApi.setAccessToken(data.body['access_token']),
+            err => console.log('Error retrieving Spotify access token', err)
+        );
+    } catch (error) {
+        console.error('Spotify API authentication failed', error);
+    }
 });
 
-client.on(Events.InteractionCreate, async interaction => {
+client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
@@ -46,129 +54,113 @@ client.on(Events.InteractionCreate, async interaction => {
         return;
     }
 
-    if (commandName === 'join') {
-        if (!interaction.member.voice.channel) {
-            await interaction.reply({ content: "You need to be in a voice channel.", ephemeral: true });
-            return;
-        }
-
-        const channel = interaction.member.voice.channel;
-        try {
-            await channel.join();
-            await interaction.reply({ content: `Joined ${channel.name}` });
-        } catch (error) {
-            await interaction.reply({ content: `An error occurred: ${error.message}`, ephemeral: true });
-        }
-    } else if (commandName === 'leave') {
-        const voiceConnection = interaction.guild.voiceAdapterCreator;
-        if (voiceConnection) {
-            voiceConnection.disconnect();
-            await interaction.reply({ content: "Disconnected from the voice channel" });
-        } else {
-            await interaction.reply({ content: "The bot is not connected to a voice channel.", ephemeral: true });
-        }
-    } else if (commandName === 'play') {
-        const url = interaction.options.getString('url');
-        if (!interaction.member.voice.channel) {
-            await interaction.reply({ content: "You need to be in a voice channel.", ephemeral: true });
-            return;
-        }
-
-        const voiceConnection = interaction.guild.voiceAdapterCreator;
-        if (!voiceConnection) {
-            await interaction.reply({ content: "Bot is not in a voice channel.", ephemeral: true });
-            return;
-        }
-
-        try {
-            const stream = ytdl(url, { filter: 'audioonly' });
-            const dispatcher = voiceConnection.play(stream, { type: 'opus' });
-            dispatcher.on('finish', () => musicPlayer.playNext(voiceConnection));
-            musicPlayer.queue.push({ stream, title: url });
-            if (!voiceConnection.dispatcher) {
-                await musicPlayer.playNext(voiceConnection);
-                await interaction.reply({ content: `**Now playing:** \`${url}\`` });
-            } else {
-                const queuePosition = musicPlayer.queue.length;
-                await interaction.reply({ content: `Added \`${url}\` to the queue. Currently at queue position ${queuePosition}` });
-            }
-        } catch (error) {
-            await interaction.reply({ content: `An error occurred: ${error.message}`, ephemeral: true });
-        }
-    } else if (commandName === 'pause') {
-        const voiceConnection = interaction.guild.voiceAdapterCreator;
-        if (voiceConnection && voiceConnection.dispatcher) {
-            voiceConnection.dispatcher.pause();
-            await interaction.reply({ content: "Paused the song" });
-        } else {
-            await interaction.reply({ content: "Currently no audio is playing.", ephemeral: true });
-        }
-    } else if (commandName === 'resume') {
-        const voiceConnection = interaction.guild.voiceAdapterCreator;
-        if (voiceConnection && voiceConnection.dispatcher) {
-            voiceConnection.dispatcher.resume();
-            await interaction.reply({ content: "Resumed the song" });
-        } else {
-            await interaction.reply({ content: "The audio is not paused.", ephemeral: true });
-        }
-    } else if (commandName === 'stop') {
-        const voiceConnection = interaction.guild.voiceAdapterCreator;
-        if (voiceConnection && voiceConnection.dispatcher) {
-            voiceConnection.dispatcher.stop();
-            await interaction.reply({ content: "Stopped the song" });
-        } else {
-            await interaction.reply({ content: "Currently no audio is playing.", ephemeral: true });
-        }
-    } else if (commandName === 'current') {
-        if (!musicPlayer.current) {
-            await interaction.reply({ content: "No song is currently playing.", ephemeral: true });
-            return;
-        }
-
-        const embed = new EmbedBuilder()
-            .setTitle("Currently Playing")
-            .setDescription(musicPlayer.current.title)
-            .setColor('#808000');
-
-        await interaction.reply({ embeds: [embed] });
-    } else if (commandName === 'queue') {
-        const queue = musicPlayer.queue;
-        if (queue.length === 0) {
-            await interaction.reply({ content: "The queue is currently empty.", ephemeral: true });
-            return;
-        }
-
-        const embed = new EmbedBuilder()
-            .setTitle("Song Queue")
-            .setDescription("List of songs in the queue")
-            .setColor('#808000');
-
-        if (musicPlayer.current) {
-            embed.addFields({ name: "**Currently Playing**", value: musicPlayer.current.title, inline: false });
-        }
-
-        queue.forEach((song, index) => {
-            embed.addFields({ name: `#${index + 1}`, value: song.title, inline: false });
-        });
-
-        await interaction.reply({ embeds: [embed] });
-    } else if (commandName === 'skip') {
-        const count = interaction.options.getInteger('count') || 1;
-        const voiceConnection = interaction.guild.voiceAdapterCreator;
-        if (voiceConnection && voiceConnection.dispatcher) {
-            for (let i = 0; i < count; i++) {
-                voiceConnection.dispatcher.stop();
-                await new Promise(res => setTimeout(res, 1000));
-            }
-            await interaction.reply({ content: `Skipped ${count} song${count > 1 ? 's' : ''}` });
-        } else {
-            await interaction.reply({ content: "Currently no audio is playing.", ephemeral: true });
-        }
+    switch (commandName) {
+        case 'join':
+            await joinCommand(interaction);
+            break;
+        case 'leave':
+            await leaveCommand(interaction);
+            break;
+        case 'play':
+            await playCommand(interaction);
+            break;
+        case 'queue':
+            await queueCommand(interaction);
+            break;
+        default:
+            await interaction.reply({ content: "Unknown command.", ephemeral: true });
+            break;
     }
 });
 
+async function joinCommand(interaction) {
+    const channel = interaction.member.voice.channel;
+    if (!channel) {
+        await interaction.reply({ content: "You need to be in a voice channel.", ephemeral: true });
+        return;
+    }
+    try {
+        joinVoiceChannel({
+            channelId: channel.id,
+            guildId: channel.guild.id,
+            adapterCreator: channel.guild.voiceAdapterCreator
+        });
+        await interaction.reply({ content: `Joined ${channel.name}` });
+    } catch (error) {
+        await interaction.reply({ content: `An error occurred: ${error.message}`, ephemeral: true });
+    }
+}
+
+async function leaveCommand(interaction) {
+    const connection = getVoiceConnection(interaction.guild.id);
+    if (connection) {
+        connection.destroy();
+        await interaction.reply({ content: "Disconnected from the voice channel" });
+    } else {
+        await interaction.reply({ content: "The bot is not connected to a voice channel.", ephemeral: true });
+    }
+}
+
+async function playCommand(interaction) {
+    const url = interaction.options.getString('url');
+    const channel = interaction.member.voice.channel;
+    if (!channel) {
+        await interaction.reply({ content: "You need to be in a voice channel.", ephemeral: true });
+        return;
+    }
+
+    const connection = joinVoiceChannel({
+        channelId: channel.id,
+        guildId: channel.guild.id,
+        adapterCreator: channel.guild.voiceAdapterCreator
+    });
+
+    try {
+        if (url.includes('spotify.com')) {
+            const results = await spotifyApi.searchTracks(url);
+            results.body.tracks.items.forEach(track => musicQueue.queue.push(track.external_urls.spotify));
+        } else {
+            const stream = ytdl(url, { filter: 'audioonly' });
+            const resource = createAudioResource(stream);
+            musicQueue.queue.push(resource);
+        }
+
+        if (!musicQueue.player.state.status === AudioPlayerStatus.Playing) {
+            playNext(connection);
+        }
+
+        await interaction.reply({ content: `Added to queue: ${url}` });
+    } catch (error) {
+        await interaction.reply({ content: `An error occurred: ${error.message}`, ephemeral: true });
+    }
+}
+
+async function queueCommand(interaction) {
+    if (musicQueue.queue.length === 0) {
+        await interaction.reply({ content: "The queue is currently empty.", ephemeral: true });
+        return;
+    }
+
+    const embed = new EmbedBuilder()
+        .setTitle("Song Queue")
+        .setDescription(musicQueue.queue.map((item, index) => `${index + 1}. ${item.title}`).join('\n'))
+        .setColor('#808000');
+
+    await interaction.reply({ embeds: [embed] });
+}
+
+function playNext(connection) {
+    if (musicQueue.queue.length === 0) return;
+
+    const nextTrack = musicQueue.queue.shift();
+    const resource = createAudioResource(nextTrack);
+    musicQueue.current = nextTrack;
+    musicQueue.player.play(resource);
+    connection.subscribe(musicQueue.player);
+}
+
 function hasAllowedRole(interaction) {
-    return interaction.member.roles.cache.some(role => role.id === allowedRoleId || role.id === boosterRoleId);
+    return interaction.member.roles.cache.some(role => [allowedRoleId, boosterRoleId].includes(role.id));
 }
 
 client.login(process.env.MUSIC_TOKEN);
