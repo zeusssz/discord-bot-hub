@@ -4,3 +4,4 @@ ytdl-core
 @discordjs/voice
 @xenova/transformers
 dotenv
+spotify-web-api-node
