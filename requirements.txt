@@ -5,3 +5,4 @@ pynacl
 torch
 transformers
 python-dotenv
+spotipy
