@@ -13,8 +13,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 load_dotenv()
 
 spotify = Spotify(client_credentials_manager=SpotifyClientCredentials(
-    client_id=os.getenv('SPOTIFY_CLIENT_ID'),
-    client_secret=os.getenv('SPOTIFY_CLIENT_SECRET')
+    client_id=os.getenv('SPOTIFY-CLIENT-ID'),
+    client_secret=os.getenv('SPOTIFY-CLIENT-SECRET')
 ))
 
 logging.basicConfig(level=logging.INFO)
@@ -259,4 +259,4 @@ async def queue(interaction: discord.Interaction):
     message = await interaction.response.send_message(embed=embed, view=view)
     view.message = message
 
-client.run(os.getenv('MUSIC_TOKEN'))
+client.run(os.getenv('MUSIC-TOKEN'))
