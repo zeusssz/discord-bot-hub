@@ -483,4 +483,4 @@ client.on('guildMemberAdd', async member => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.['MOD-TOKEN']);
