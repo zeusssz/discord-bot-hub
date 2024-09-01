@@ -163,4 +163,4 @@ function hasAllowedRole(interaction) {
     return interaction.member.roles.cache.some(role => [allowedRoleId, boosterRoleId].includes(role.id));
 }
 
-client.login(process.env.MUSIC_TOKEN);
+client.login(process.env['MUSIC-TOKEN']);
