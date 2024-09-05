@@ -1,14 +1,11 @@
 # 🤖 Discord Bot Hub
+![Stars](https://img.shields.io/github/stars/zeusssz/discord-bot-hub?style=flat-square)  ![Forks](https://img.shields.io/github/forks/zeusssz/discord-bot-hub?style=flat-square)  ![Issues](https://img.shields.io/github/issues/zeusssz/discord-bot-hub?style=flat-square)  ![License](https://img.shields.io/github/license/zeusssz/discord-bot-hub?style=flat-square)  ![Last Commit](https://img.shields.io/github/last-commit/zeusssz/discord-bot-hub?style=flat-square)
 
 Welcome to the **Discord Bot Hub**! This repository contains multiple Discord bots designed for various functionalities. (If you wish to use `discord.js` instead of `discord.py`, you may go to the [JS version](https://github.com/zeusssz/discord-bot-hub/tree/js-version) of this repo. Be warned, as the JS version is extremely buggy, and the port is still not finished.)
 
 ## 🛠️ Bots Included
 
----
-
 ### 🚨 **ModeratorBot**
-
-![ModeratorBot](https://via.placeholder.com/600x200?text=ModeratorBot) 
 
 **Features:**
 - Ban, kick, and mute users.
@@ -26,8 +23,6 @@ Welcome to the **Discord Bot Hub**! This repository contains multiple Discord bo
 
 ### 🎵 **MusicBot**
 
-![MusicBot](https://via.placeholder.com/600x200?text=MusicBot) 
-
 **Features:**
 - Play, pause, skip, and stop music.
 - Queue songs and manage playlists.
@@ -43,8 +38,6 @@ Welcome to the **Discord Bot Hub**! This repository contains multiple Discord bo
 
 ### 💰 **EconomyBot**
 
-![EconomyBot](https://via.placeholder.com/600x200?text=EconomyBot) 
-
 **Features:**
 - Manage virtual currency with commands like `/bal`, `/rob`, and `/coinflip`.
 - Create and manage lootboxes.
@@ -58,8 +51,6 @@ Welcome to the **Discord Bot Hub**! This repository contains multiple Discord bo
 ---
 
 ### 🗣️ **ChatBot**
-
-![ChatBot](https://via.placeholder.com/600x200?text=ChatBot) 
 
 **Features:**
 - Have conversational interactions with AI.
@@ -100,5 +91,3 @@ Read the [contribution guidelines](CONTRIBUTING.md) to learn how to write accord
 ## ℹ️ Info
 
 For any questions or issues, please contact [@roboxer_](https://discord.com/users/roboxer_) on Discord.
-
----
