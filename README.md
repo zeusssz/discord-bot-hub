@@ -1,4 +1,5 @@
 # 🤖 Discord Bot Hub
+![Stars](https://img.shields.io/github/stars/zeusssz/discord-bot-hub?style=flat-square)  ![Forks](https://img.shields.io/github/forks/zeusssz/discord-bot-hub?style=flat-square)  ![Issues](https://img.shields.io/github/issues/zeusssz/discord-bot-hub?style=flat-square)  ![License](https://img.shields.io/github/license/zeusssz/discord-bot-hub?style=flat-square)  ![Last Commit](https://img.shields.io/github/last-commit/zeusssz/discord-bot-hub?style=flat-square)
 
 Welcome to the Discord Bot Hub! This repository contains multiple Discord bots designed for various functionalities. Currently, it includes:
 
