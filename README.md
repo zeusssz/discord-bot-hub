@@ -15,6 +15,7 @@ It is recommended to have a good CPU/GPU if you plan to increase the default con
 ## Dependencies 
 - Node.js
 - discord.js
+- Others given in [requirements](requirements.txt)
 
 ## Bots Overview
 
