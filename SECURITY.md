@@ -9,6 +9,5 @@ Security updates mainly consist of fixing issues, and dependency updates, as wel
 | 1.0.2   | ✅                 |
 | 1.0.1   | ✅                 |
 | <1.0.0  | ❌                 |
-
 ## Reporting a Vulnerability
 If you discover a vulnerability, **Do Not** make an issue. Instead, directly DM @roboxer_ on discord
