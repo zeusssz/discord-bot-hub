@@ -25,11 +25,11 @@ If you'd like to contribute code:
 1. **Fork the Repository**: Create your own copy of the repository by forking it.
 2. **Clone Your Fork**: Clone the forked repository to your local machine.
    ```bash
-   git clone https://github.com/your-username/discord-bot-hub.git
+   git clone https://github.com/zeusssz/discord-bot-hub.git
    ```
 3. **Create a Branch**: Create a new branch for your changes.
    ```bash
-   git checkout -b my-feature-branch
+   git checkout -b your-feature-branch
    ```
 4. **Make Your Changes**: Implement your changes or additions.
 5. **Test Your Changes**: Ensure your changes work as expected and do not break existing functionality.
@@ -40,7 +40,7 @@ If you'd like to contribute code:
    ```
 7. **Push to Your Fork**: Push your changes to your forked repository.
    ```bash
-   git push origin my-feature-branch
+   git push origin your-feature-branch
    ```
 8. **Create a Pull Request**: Open a pull request to merge your changes into the main repository. Provide a detailed description of your changes and reference any relevant issues.
 
