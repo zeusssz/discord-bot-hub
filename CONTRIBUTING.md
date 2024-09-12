@@ -8,7 +8,7 @@ Thank you for considering contributing to Discord Bot Hub! Your contributions he
 
 If you encounter any bugs or issues, please:
 
-1. **Check Existing Issues**: See if the issue has already been reported or addressed.
+1. **Check Existing Issues**: See if the issue has already been reported or addressed. If an issue has already been reported, make sure to comment on that issue, and inform you are experiencing that issue as well.
 2. **Create a New Issue**: If not, open a new issue and provide as much detail as possible, including steps to reproduce the problem, expected behavior, and actual behavior.
 
 ### Suggesting Enhancements
