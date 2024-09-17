@@ -26,8 +26,8 @@ activity = discord.Activity(type=discord.ActivityType.listening, name="Lorem Ips
 client = discord.Client(intents=intents, activity=activity)
 tree = CommandTree(client)
 
-allowed_role_id = 0 # input your role id
-booster_role_id = 0 # input your role id
+allowed_role_id = 1 # input your role id
+booster_role_id = 1 # input your role id
 
 class QueueView(View):
     def __init__(self, songs, current_song, user):
