@@ -24,7 +24,7 @@ client = discord.Client(intents=intents, activity=activity)
 starred_messages = set()
 tree = discord.app_commands.CommandTree(client)
 
-GUILD_ID = 0 #your guild id here
+GUILD_ID = 0 #your guild (server) id here
 ROLES_FILE = "roles.json"
 BANS_FILE = "bans.json"
 MUTES_FILE = "mutes.json"
@@ -41,7 +41,7 @@ class LogHandler(logging.Handler):
     def emit(self, record):
         log_entry = self.format(record)
         log_capture.append(log_entry)
-        # Keep only the last 100 log entries for recent logs
+        # keep only the last 100 log entries for recent logs
         if len(log_capture) > 100:
             log_capture.pop(0)
 
@@ -291,25 +291,21 @@ async def notes(interaction: discord.Interaction, member: discord.Member):
 @app_commands.describe(member="The member to get information about")
 async def whois(interaction: discord.Interaction, member: discord.Member):
     if interaction.user.guild_permissions.manage_messages:
-        # Get member information
+
         nickname = member.display_name
         username = member.name
         user_id = member.id
         roles = [role.mention for role in member.roles if role != interaction.guild.default_role]
 
-        # Get warnings
         warnings_data = load_data(WARNINGS_FILE)
         user_warnings = warnings_data.get(str(member.id), [])
 
-        # Get notes
         notes_data = load_data(NOTES_FILE)
         user_notes = notes_data.get(str(member.id), [])
 
-        # Join dates
         discord_join_date = member.created_at.strftime("%d-%m-%Y")
         server_join_date = member.joined_at.strftime("%d-%m-%Y")
 
-        # Create embed
         embed = discord.Embed(
             title=f"Information for {nickname}",
             color=discord.Color.dark_red()
@@ -353,8 +349,6 @@ async def membercount(interaction: discord.Interaction):
 # async def on_message(message):
 #     if message.author.bot:
 #         return
-
-#     # Check for banned words
 #     if any(pattern.search(message.content) for pattern in banned_word_patterns):
 #         try:
 #             await message.delete()
@@ -379,7 +373,6 @@ async def on_raw_reaction_add(payload):
                 embed.add_field(name="Jump to message", value=f"[Click here]({message.jump_url})", inline=False)
 
                 if message.attachments:
-                    # Check if the attachment is an image
                     if any(attachment.url.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')) for attachment in message.attachments):
                         for attachment in message.attachments:
                             if attachment.url.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
@@ -416,7 +409,7 @@ async def on_member_join(member):
 @tree.command(name="serverstatus", description="Get the current status of the server")
 async def serverstatus(interaction: discord.Interaction):
     if interaction.user.guild_permissions.manage_messages:
-        # Count recent errors and warnings
+        # count recent errors and warnings
         recent_errors = [log for log in log_capture if 'ERROR' in log][:100]
         recent_warnings = [log for log in log_capture if 'WARNING' in log][:100]
 
