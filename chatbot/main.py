@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-model_name = "microsoft/DialoGPT-medium"
+model_name = "microsoft/DialoGPT-medium" # change if you want
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
