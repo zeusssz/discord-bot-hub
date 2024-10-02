@@ -111,7 +111,7 @@ async def rob(interaction: discord.Interaction, target: discord.Member):
         users[user_id]["balance"] -= loss
         await interaction.response.send_message(f"Robbery failed! You lost {loss} francs.")
 
-    rob_cooldowns[user_id] = asyncio.get_event_loop().time() + 60  # 60 seconds cooldown
+    rob_cooldowns[user_id] = asyncio.get_event_loop().time() + 60  # 60s cooldown
     save_users()
 
 async def lootbox_timeout(message_sent):
