@@ -7,7 +7,7 @@ import os
 from discord.ui import Button, View
 import math
 from dotenv import load_dotenv
-from spotipy import Spotify
+from spotipy import Spotify # soon
 from spotipy.oauth2 import SpotifyClientCredentials
 
 load_dotenv()
