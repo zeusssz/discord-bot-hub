@@ -99,4 +99,4 @@ Read the [contribution guidelines](CONTRIBUTING.md) to learn how to write accord
 
 ## ℹ️ Info
 
-For any questions or issues, please contact [@roboxer_](https://discord.com/users/roboxer_) on Discord.
+For any questions or issues, please contact [@roboxer_](https://discordapp.com/users/844557128139014205) on Discord.
