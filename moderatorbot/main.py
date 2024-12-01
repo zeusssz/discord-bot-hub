@@ -8,8 +8,6 @@ import asyncio
 from typing import Optional
 import re
 import time
-from dotenv import load_dotenv
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +21,7 @@ client = discord.Client(intents=intents, activity=activity)
 starred_messages = set()
 tree = discord.app_commands.CommandTree(client)
 
-GUILD_ID = 0 #your guild (server) id here
+GUILD_ID = 0
 ROLES_FILE = "roles.json"
 BANS_FILE = "bans.json"
 MUTES_FILE = "mutes.json"
@@ -31,8 +29,8 @@ WARNINGS_FILE = "warnings.json"
 BANNED_WORDS = "banned_words.json"
 NOTES_FILE = "notes.json"
 STAR_EMOJI = '⭐'
-STARBOARD_CHANNEL_ID = 0 #your starboard channel id
-WELCOME_CHANNEL_ID = 0 #your welcome channel id
+STARBOARD_CHANNEL_ID = 0
+WELCOME_CHANNEL_ID = 0
 
 log_capture = []
 
@@ -60,7 +58,7 @@ def load_data(file_name):
 def save_data(file_name, data):
     with open(file_name, "w") as f:
         json.dump(data, f, indent=4)
-        
+
 for file_name in [ROLES_FILE, BANS_FILE, MUTES_FILE, WARNINGS_FILE, BANNED_WORDS, NOTES_FILE]:
     if not os.path.exists(file_name):
         with open(file_name, "w") as f:
@@ -404,7 +402,7 @@ async def on_member_join(member):
         await welcome_channel.send(embed=embed)
     else:
         logging.error("Welcome channel not found. Make sure the channel ID is correct.")
-        
+
 @tree.command(name="serverstatus", description="Get the current status of the server")
 async def serverstatus(interaction: discord.Interaction):
     if interaction.user.guild_permissions.manage_messages:
@@ -444,5 +442,5 @@ async def serverstatus(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
 
-token = os.getenv("MOD-TOKEN")
+token = os.getenv("TOKEN")
 client.run(token)
